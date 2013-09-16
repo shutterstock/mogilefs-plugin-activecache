@@ -1,4 +1,10 @@
 package MogileFS::Plugin::ActiveCache
+
+use strict;
+use warnings;
+
+our $VERSION = '0.01';
+
 sub load {
 	MogileFS::register_global_hook('file_stored', sub {
 			my $args = shift;
