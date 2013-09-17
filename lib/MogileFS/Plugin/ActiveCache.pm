@@ -1,4 +1,4 @@
-package MogileFS::Plugin::ActiveCache
+package MogileFS::Plugin::ActiveCache;
 
 use strict;
 use warnings;
