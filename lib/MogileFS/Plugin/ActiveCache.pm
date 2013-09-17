@@ -27,18 +27,32 @@ sub cache_file_stored {
 	my $path  = $args->{path};
 	my $checksum = $args->{checksum};
 
-	my $memc = MogileFS::Config->memcache_client;
+	set_mogfid($dmid, $key, $fidid);
+	set_mogdevids($fidid, $devid);
+}
+
+sub set_mogfid {
+	my $dmid   = shift;
+	my $key    = shift;
+	my $fidid  = shift;
+	my $memkey = "mogfid:$dmid:$key";
+	set_memcache_key($memkey, $fidid);
+}
+
+sub set_mogdevids {
+	my $fidid      = shift;
+	my @fid_devids = @_;
+	my $memkey     = "mogdevids:$fidid";
+	set_memcache_key($memkey, \@fid_devids);
+}
+
+sub set_memcache_key {
+	my $memkey   = shift;
+	my $memvalue = shift;
+	my $ttl      = MogileFS::Config->server_setting_cached("memcache_ttl") || 3600;
+	my $memc     = MogileFS::Config->memcache_client;
 	if ($memc) {
-		my $memcache_ttl = MogileFS::Config->server_setting_cached("memcache_ttl") || 3600;
-
-		# Set the fid lookup key first
-		my $mogfid_memkey = "mogfid:$dmid:$key";
-		$memc->set($mogfid_memkey, $fidid, $memcache_ttl);
-
-		# Now set your devid list
-		my $devid_memkey = "mogdevids:$fidid";
-		my $fid_devids = [$devid];
-		$memc->set($devid_memkey, $fid_devids, $memcache_ttl);
+		$memc->set($memkey, $memvalue, $ttl);
 	}
 }
 1;
