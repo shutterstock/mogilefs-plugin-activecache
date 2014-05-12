@@ -11,11 +11,17 @@ sub load {
 			cache_file_stored($args);
 			return 1;
 	});
+	MogileFS::register_global_hook('file_renamed', sub {
+			my $args = shift;
+			cache_file_stored($args);
+			return 1;
+	});
 	return 1;
 }
 
 sub unload {
 	MogileFS::unregister_global_hook('file_stored');
+	MogileFS::unregister_global_hook('file_renamed');
 }
 
 sub cache_file_stored {
