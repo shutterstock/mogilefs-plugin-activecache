@@ -54,7 +54,7 @@ sub cache_plugin_file_migrated {
   });
 
   set_mogfid($dst_dmid, $dst_key, $fidid);
-  set_mogdevids($fidid, \@fid_devids);
+  set_mogdevids($fidid, @fid_devids);
 }
 
 sub set_mogfid {
