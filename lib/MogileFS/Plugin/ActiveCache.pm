@@ -33,8 +33,15 @@ sub cache_file_stored {
 	my $path  = $args->{path};
 	my $checksum = $args->{checksum};
 
+	my $fid = MogileFS::FID->new($fidid);
+
+	my @fid_devids;
+	Mgd::get_store()->slaves_ok(sub {
+		@fid_devids = $fid->devids;
+	});
+
 	set_mogfid($dmid, $key, $fidid);
-	set_mogdevids($fidid, $devid);
+	set_mogdevids($fidid, @fid_devids);
 }
 
 sub cache_plugin_file_migrated {
